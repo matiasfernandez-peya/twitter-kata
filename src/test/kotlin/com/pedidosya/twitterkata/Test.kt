@@ -59,8 +59,8 @@ class Test {
     @Test
     fun `un usuario que no tiene mensajes obtiene una lista vacia`() {
         // given
-        val user = User("nickName", "Full Name")
-        val retrieveUserMessages = RetrieveUserMessages()
+        val user = User("user without messages", "Full Name")
+        val retrieveUserMessages = RetrieveUserMessages(emptyList())
         val userMessages = emptyList<UserMessage>()
 
         // when
@@ -70,29 +70,36 @@ class Test {
         Assertions.assertEquals(userMessages, retrievedUserMessages)
     }
 
-/*
+
     @Test
     fun `un usuario puede listar sus mensajes`() {
         // given
         val user = User("nickName", "Full Name")
-        val retrieveUserMessages = RetrieveUserMessages()
-        val userMessages = listOf(UserMessage(user,"message 1"),UserMessage(user,"message 2"))
+        val userMessages = listOf(UserMessage(user, "message 1"), UserMessage(user, "message 2"))
+        val retrieveUserMessages = RetrieveUserMessages(userMessages)
 
         // when
         val retrievedUserMessages = retrieveUserMessages.execute(user)
 
         // then
-        Assertions.assertEquals(userMessages,retrievedUserMessages)
+        Assertions.assertEquals(userMessages, retrievedUserMessages)
     }
-    */
+
 }
 
-class RetrieveUserMessages() {
+class RetrieveUserMessages(private val messages: List<UserMessage>) {
 
-    fun execute(user: User): List<UserMessage> {
-        return emptyList()
+    fun execute(searchUser: User): List<UserMessage> {
+        return messages.filter { it.user == searchUser }
     }
 
+}
+
+class PublishMessage {
+
+    fun post(user: User, message: String): UserMessage {
+        return UserMessage(user, message)
+    }
 }
 
 class RegisterUser {
@@ -108,13 +115,6 @@ class RegisterUser {
         users.add(user)
 
         return user
-    }
-}
-
-class PublishMessage {
-
-    fun post(user: User, message: String): UserMessage {
-        return UserMessage(user, message)
     }
 }
 
