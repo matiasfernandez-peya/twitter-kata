@@ -42,16 +42,18 @@ class Test {
 
     @Test
     fun `un usuario puede publicar mensajes a su timeline personal`() {
-        val user = User("nickName", "fullName")
-        val timeline = Timeline(user)
-
+        // given
         val publishMessage = PublishMessage()
 
+        val user = User("nickName", "fullName")
         val message = "hi :D"
 
-        publishMessage.post(user, message)
+        // when
+        val userMessage: UserMessage = publishMessage.post(user, message)
 
-        assert(publishMessage.messages.isNotEmpty())
+        // then
+        assertEquals(message, userMessage.message)
+        assertEquals(user, userMessage.user)
     }
 }
 
@@ -72,14 +74,14 @@ class RegisterUser {
 }
 
 class PublishMessage {
-    val messages: MutableList<String> = mutableListOf()
 
-    fun post(user: User, message :String) {
-        messages.add(message)
+    fun post(user: User, message: String): UserMessage {
+        return UserMessage(user, message)
     }
 }
 
-data class Timeline(val user: User)
+data class UserMessage(val user: User, val message: String)
+
 
 data class User(val nickName: String, val fullName: String)
 
